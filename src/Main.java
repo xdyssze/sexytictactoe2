@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class Main {
     /*
     TODO:
@@ -7,6 +8,7 @@ public class Main {
       * fixa algorytm för att avgöra vinnare
      */
     public static void main(String[] args) {
+
         Scanner scan = new Scanner(System.in);
         boolean running = true;
         char PLAYERCHAR, COMPUTERCHAR;
@@ -17,7 +19,7 @@ public class Main {
 
         System.out.println("Du ska nu få spela TIC TAC TOE, Välj vilken Symbol du vill vara:");
         String tempstr = scan.nextLine();
-        // Ser till att man inte kan stoppa in nått gay såsom ingeting / mellanslag och att det inte är samma tecken som datorn
+        // Ser till att man inte kan stoppa in nått äckligt såsom ingeting / mellanslag och att det inte är samma tecken som datorn
         if(tempstr.isEmpty() || tempstr.charAt(0) == ' ') {
             PLAYERCHAR = 'X';
             COMPUTERCHAR = 'O';
@@ -28,14 +30,30 @@ public class Main {
                 COMPUTERCHAR = 'X';
             }
         }
+
         while(running) {
             System.out.println(sqr.gridString());
+            char winner = sqr.checkWinner();
+            if(winner != ' ') {
+                running = false;
+                System.out.println("Winner is: " + winner + "\r\n");
+            } else {
+                System.out.println("Select where to place square (Y then X, ex A1): ");
+                String nxtPlSqr = scan.nextLine();
+                sqr.grid[(int)(nxtPlSqr.toCharArray()[0]-'A')][(int) (nxtPlSqr.charAt(1)-'1')] = PLAYERCHAR;
+
+            }
+
 
 
 
 
 
         }
+
+    }
+    public static class Opponent {
+        // hur ska ait fungera? Min tanke
 
     }
 
@@ -54,13 +72,16 @@ public class Main {
         }
         public String gridString() {
             String grdStr = "";
+            char a = 'A';
         // top part
+            grdStr += "    1   2   3  \r\n";
             for(int i = 0; i < 3; i++) {
-                grdStr += "--1----------\r\n";
-                grdStr += "| " + grid[i][0] + " | "+ grid[i][1] + " | "+ grid[i][2] + " |\r\n";
+                grdStr += "  -------------\r\n";
+                grdStr +=  (a) + " | " + grid[i][0] + " | "+ grid[i][1] + " | "+ grid[i][2] + " |\r\n";
+                a++;
 
             }
-            grdStr += "-------------";
+            grdStr += "  -------------";
             return(grdStr);
         }
         // kollar vinnaren av en viss ruta
