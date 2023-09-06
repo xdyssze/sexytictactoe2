@@ -3,33 +3,18 @@ import java.util.Scanner;
 public class Main {
     /*
     TODO:
-      * fixa algorytm för att avgöra vinnare
-      * fixa ett ai som kan agera som motståndare
+      * Fixa ett mindre hjärndött ai genom att prioritera vissa rutor över andra. Tex flytta prion av rutan som bytes ut till rutan i vilken riktningen går.
      */
     public static void main(String[] args) {
-        char[][][] tempS = new char[][][] {{ {1, 2}, {3, 6}, {4, 8}}, { {0, 2},  {4, 7}  }, { {0, 1}, {4, 6}, {5, 8} }, { {4, 5}, {0, 6}  }, {{3, 5}, {1, 7}, {0, 8}, {2, 6}}, { {2, 8}, {3, 4} }, { {0, 3}, {2, 4}, {7, 8} }, {{6, 8}, {1, 4} }, { {0, 4}, {2, 5}, {6, 7} }};
-        /*
 
-        {
-          { 0: [1, 2], 1: [3, 6], 2: [4, 8] },
-          { 0: [0, 2], 1: [4, 7]  },
-          { 0: [0, 1], 1: [4, 6], 2: [5, 8] },
-          { 0: [4, 5], 1: [0, 6]  },
-          { 0: [3, 5], 1: [1, 7], 2: [0, 8], 3: [2, 6]},
-          { 0: [2, 8], 1: [3, 4] },
-          { 0: [0, 3], 1: [2, 4], 2: [7, 8] },
-          { 0: [6, 8], 1: [1, 4] },
-          { 0: [0, 4], 1: [2, 5], 2: [6, 7] },
-
-        }
-         */
 
         Scanner scan = new Scanner(System.in);
-        boolean running = true;
+        int times = 0;
         char PLAYERCHAR, COMPUTERCHAR;
         Opponent comp = new Opponent();
         Square sqr = new Square();
         Player plr = new Player();
+
         // jag vill göra ett tictactoe spel som på det smartaste vägen möjligt kollar vem som vunnit
         // allt annat e bara onödigt,
 
@@ -49,7 +34,7 @@ public class Main {
             }
         }
 
-        while(running) {
+        while(true) {
             System.out.println(sqr.gridString());
 
 
@@ -63,15 +48,20 @@ public class Main {
                 if(sqr.grid[cords[0]][cords[1]] == ' ') {
                     sqr.grid[cords[0]][cords[1]] = PLAYERCHAR;
                     plr.placement(cords);
+                    times++;
+                    if(times >= 9) {
+                        System.out.println("No one has won, Try Again!");
+                        return;
+                    }
                     if(sqr.checkWinner(cords, plr.grid)) {
                         System.out.println("Player has won!");
-                        break;
+                        return;
                     }
                     comp.increaseChance(cords);
                     int[] compMove = comp.makeMove(COMPUTERCHAR,sqr);
                     if(sqr.checkWinner(compMove, comp.grid)) {
                         System.out.println("Computer has won!");
-                        break;
+                        return;
                     }
                 }
 
@@ -86,6 +76,7 @@ public class Main {
         }
 
     }
+    // skapar en lite snabb player class bara så att den kan förvara info och liknande om spelaren.
     public static class Player extends Grid{
 
         public Player() {
@@ -98,6 +89,7 @@ public class Main {
     }
     public static class  Opponent extends Grid{
         // hur ska ait fungera? Min tanke är rutnät av bästa ställen att placera saker
+        // precis det är hur ait fungerar, placerar ut et rutnät med vissa värden, och den prioriterar utifrån dessa rutor vart den ska placera.
         int[][] chancegrid = new int[3][3];
 
 
